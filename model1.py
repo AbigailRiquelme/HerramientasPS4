@@ -51,8 +51,9 @@ class Model1(QgsProcessingAlgorithm):
         # Eliminamos algunas variables (drop fields)
         ##################################################################
         # Definimos el siguiente diccionario para poder eliminar las variables que no son de interés. El primer elemento del diccionario 
-        # contiene una lista con los nombres de las variables a eliminar, el segundo elemento tiene el archivo que utilizaremos como input, 
-        # el tercer elemento del diccionario aplica el parámetro para exportar el archivo modificado.  
+        # contiene una lista con los nombres de las variables a eliminar, el segundo elemento tiene la capa que utilizaremos como input, 
+        # el tercer elemento del diccionario aplica el parámetro para exportar la capa modificado.  
+        
         alg_params = {
             'COLUMN': ['ID_ISO_A3','ID_ISO_A2','ID_FIPS','NAM_LABEL','NAME_PROP','NAME2','NAM_ANSI','CNT','C1','POP','LMP_POP1','G','LMP_CLASS','FAMILYPROP','FAMILY','langpc_km2','length'],
             'INPUT': 'Calculated_924c8208_b57a_4493_86bb_f6c8c68d63c7',
@@ -63,11 +64,21 @@ class Model1(QgsProcessingAlgorithm):
         # Se exporta el archivo modificado 
         results['Wldsout'] = outputs['DropFields']['OUTPUT']
 
+        # A continuación indicamos que si ocurre algún tipo de error se suspensa el procesamiento del algoritmo y se devuelva un diccionario en blanco. 
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
 
-        # Field calculator clone
+        #########################################################
+        # Clonamos la variable que contiene el idioma 
+        # de cada pais (clone field calculator)
+        #########################################################
+        
+        
+        # Definimos el siguiente diccionario con los parámetros para poder usar la herramienta "clone field calculator". El segundo elemento del diccionario contiene 
+        # la capa que utilizaremos como input, esta es la capa que no inlcuye a aquellos países que tienen un idioma cuyo nombre posee más de 10 letras, 
+        # el tercer elemento aplica una función para clonar la variable que contiene el idioma de cada país. 
+        
         alg_params = {
             'FIELD_LENGTH': 10,
             'FIELD_NAME': 'lnm',
@@ -77,26 +88,46 @@ class Model1(QgsProcessingAlgorithm):
             'INPUT': 'menor_a_11_e34436c1_4efe_47fa_8c35_5556f2cbdd3a',
             'OUTPUT': parameters['Field_calc']
         }
+        
+        # Ahora aplicamos el proceso para hacer clonar la variable de interés. Se utiliza como parámetro el diccionario 
+        # definido en las lineas 82-90. 
         outputs['FieldCalculatorClone'] = processing.run('native:fieldcalculator', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+       # Se exporta el archivo modificado
         results['Field_calc'] = outputs['FieldCalculatorClone']['OUTPUT']
-
+        # A continuación indicamos que si ocurre algún tipo de error se suspensa el procesamiento del algoritmo y se devuelva un diccionario en blanco. 
         feedback.setCurrentStep(2)
         if feedback.isCanceled():
             return {}
-
-        # Feature filter
+        
+        
+        #########################################################
+        # Eliminamos aquellos países que tienen un idioma con más 
+        # de ocho letras (feature calculator)
+        #########################################################
+        
+        # Definimos el siguiente diccionario. El primer elemento tiene el archivo que utilizaremos como input, el segundo elemento aplica el parámetro 
+        # para poder eliminar los países que tienen un idioma con más de ocho letras. 
         alg_params = {
             'INPUT': 'Calculated_728a2172_2bdc_4c50_a929_c5e1f25acd77',
             'OUTPUT_menor_a_11': parameters['Output_menor_a_11']
         }
+        # Ahora aplicamos el proceso para eliminar los países especificados anteriormente. Utilizamos como parámetro el diccionario definido anteriomente en 
+        # las lineas 110-113. 
+        
         outputs['FeatureFilter'] = processing.run('native:filter', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         results['Output_menor_a_11'] = outputs['FeatureFilter']['OUTPUT_menor_a_11']
-
+        # A continuación indicamos que si ocurre algún tipo de error se suspensa el procesamiento del algoritmo y se devuelva un diccionario en blanco. 
         feedback.setCurrentStep(3)
         if feedback.isCanceled():
             return {}
 
-        # Field calculator
+        #########################################################
+        # Calculamos la cantidad de letras que tiene le nombre 
+        # del idioma de cada país (field calculator)
+        #########################################################
+
+        # Definimos el siguiente diccionario. El segundo elemento del diccionario tiene el archivo que utilizaremos como input, el tercer elemento aplica el 
+        # parámetro para poder calcular la cantidad de letras del nombre de cada uno de los idiomas. 
         alg_params = {
             'FIELD_LENGTH': 2,
             'FIELD_NAME': 'length',
@@ -106,9 +137,11 @@ class Model1(QgsProcessingAlgorithm):
             'INPUT': 'Incremented_34cdcbc1_c08e_4290_b018_61e3c96f080c',
             'OUTPUT': parameters['Length']
         }
+        # Ahora aplicamos el proceso para calcular la cantidad de letras del nombre de cada idioma. Utilizamos como parámetro el diccionario definido 
+        # anteriomente en las lineas 131-139. 
         outputs['FieldCalculator'] = processing.run('native:fieldcalculator', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         results['Length'] = outputs['FieldCalculator']['OUTPUT']
-
+        # A continuación indicamos que si ocurre algún tipo de error se suspensa el procesamiento del algoritmo y se devuelva un diccionario en blanco. 
         feedback.setCurrentStep(4)
         if feedback.isCanceled():
             return {}
