@@ -37,21 +37,30 @@ class Model1(QgsProcessingAlgorithm):
         # Aquí se agrega la herramienta "fix geometries"
         self.addParameter(QgsProcessingParameterFeatureSink('Fix_geo', 'fix_geo', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None)
     
-    # Mediante la siguiente función se procesa el algoritmo. La función tiene como parámetros el nombre del algoritmo,              
+    # Mediante la siguiente función se procesa el algoritmo. La función tiene como parámetros el nombre del algoritmo, 
+    # los parámetros definidos anteriormente, el contexto en el que se ejecutará el algoritmo y feedback del modelo.           
     def processAlgorithm(self, parameters, context, model_feedback): 
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
-        feedback = QgsProcessingMultiStepFeedback(6, model_feedback)
+        feedback = QgsProcessingMultiStepFeedback(6, model_feedback) # En el primer argumento de la función escribimos la cantidad de procesos del algoritmo. 
+        # Definimos diccionarios en donde se ira guardando el output de los distintos procesos. 
         results = {}
         outputs = {}
 
-        # Drop field(s)
+        ##################################################################
+        # Eliminamos algunas variables (drop fields)
+        ##################################################################
+        # Definimos el siguiente diccionario para poder eliminar las variables que no son de interés. El primer elemento del diccionario 
+        # contiene una lista con los nombres de las variables a eliminar, el segundo elemento tiene el archivo que utilizaremos como input, 
+        # el tercer elemento del diccionario aplica el parámetro para exportar el archivo modificado.  
         alg_params = {
             'COLUMN': ['ID_ISO_A3','ID_ISO_A2','ID_FIPS','NAM_LABEL','NAME_PROP','NAME2','NAM_ANSI','CNT','C1','POP','LMP_POP1','G','LMP_CLASS','FAMILYPROP','FAMILY','langpc_km2','length'],
             'INPUT': 'Calculated_924c8208_b57a_4493_86bb_f6c8c68d63c7',
             'OUTPUT': parameters['Wldsout']
         }
+        # Ahora se aplica el proceso para eliminar las columnas, se utiliza como parámetro el diccionario definido en las lineas 56-59. 
         outputs['DropFields'] = processing.run('native:deletecolumn', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+        # Se exporta el archivo modificado 
         results['Wldsout'] = outputs['DropFields']['OUTPUT']
 
         feedback.setCurrentStep(1)
