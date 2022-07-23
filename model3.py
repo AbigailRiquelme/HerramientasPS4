@@ -1,14 +1,12 @@
 """
-Model exported as python.
-Name : model3
-Group : 
-With QGIS : 32209
+Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022Name : model1
+TomÃ¡s Pacheco y Abigail Riquelme
+Comentarios sobre el modelo 3
+
 """
 
-from qgis.core import QgsProcessing
-from qgis.core import QgsProcessingAlgorithm
-from qgis.core import QgsProcessingMultiStepFeedback
-from qgis.core import QgsProcessingParameterFeatureSink
+from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, 
+                       QgsProcessingMultiStepFeedback, QgsProcessingParameterFeatureSink)
 import processing
 
 
