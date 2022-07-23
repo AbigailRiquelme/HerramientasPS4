@@ -1,9 +1,10 @@
 """
-Model exported as python.
-Name : model1
-Group : 
-With QGIS : 32209
+Herramientas Computacionales para la Investigación - MAE UdeSA 2022Name : model1
+Tomás Pacheco y Abigail Riquelme
+Comentarios sobre el modelo 1
+
 """
+
 
 # Comenzamos importando las librerías que se necesitarán para correrlo los diferentes programas.
 
@@ -121,6 +122,7 @@ class Model1(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
 
+
         #########################################################
         # Calculamos la cantidad de letras que tiene le nombre 
         # del idioma de cada país (field calculator)
@@ -145,20 +147,37 @@ class Model1(QgsProcessingAlgorithm):
         feedback.setCurrentStep(4)
         if feedback.isCanceled():
             return {}
+        
+        
+        #########################################################
+        # Fix geometries 
+        #########################################################
+        
+        # Necesitamos corregir las geometrías. Esto lo hacemos para evitar que los polígonos se superpongan o que haya polígonos no cerrados.
 
-        # Fix geometries
+        # Definimos diccionario con el input y output. 
         alg_params = {
-            'INPUT': 'C:/Users/Abi/Desktop/herramientasC5/input/langa.shp',
+            'INPUT': wldsin,
             'OUTPUT': parameters['Fix_geo']
         }
+        # Aplicamos el proceso de corregir las geometrías y las guardamos en los diccionarios creados.
         outputs['FixGeometries'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         results['Fix_geo'] = outputs['FixGeometries']['OUTPUT']
-
+        # Indicamos que si ocurre algún tipo de error se suspensa el procesamiento del algoritmo y se devuelva un diccionario en blanco. 
         feedback.setCurrentStep(5)
         if feedback.isCanceled():
             return {}
+        
+        
+        #########################################################
+        # Generamos una variable índice para 'GID' con la
+        # herramienta autoincremental
+        #########################################################
 
-        # Add autoincremental field
+        # Para usar la herramienta autoincremental tenemos que definir los parámetros.
+        # Primero le decimos que vamos a crear esta variable en función de la variable GID y no lo agruparemos utilizando otra variable.
+        # Luego le decimos que el input es la capa 'FixGeometries' del proceso anterior (linea 152). 
+        # Le decimos que empiece a contar en 1 y que el output sea una capa llamada 'Autoinc_id'.
         alg_params = {
             'FIELD_NAME': 'GID',
             'GROUP_FIELDS': [''],
@@ -170,9 +189,14 @@ class Model1(QgsProcessingAlgorithm):
             'START': 1,
             'OUTPUT': parameters['Autoinc_id']
         }
+        # Aplicamos el proceso y guardamos los outputs.
         outputs['AddAutoincrementalField'] = processing.run('native:addautoincrementalfield', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         results['Autoinc_id'] = outputs['AddAutoincrementalField']['OUTPUT']
+        
+        # Finalmente, la función devuelve el diccionario results que contiene las capas modificadas.
         return results
+
+
 
     def name(self):
         return 'model1'
