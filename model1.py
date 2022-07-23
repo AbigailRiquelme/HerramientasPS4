@@ -5,24 +5,40 @@ Group :
 With QGIS : 32209
 """
 
-from qgis.core import QgsProcessing
-from qgis.core import QgsProcessingAlgorithm
-from qgis.core import QgsProcessingMultiStepFeedback
-from qgis.core import QgsProcessingParameterFeatureSink
+# Comenzamos importando las librerías que se necesitarán para correrlo los diferentes programas.
+
+from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, QgsProcessingMultiStepFeedback, QgsProcessingParameterFeatureSink)
 import processing
+import os
+
+# Ahora vamos a definir el directorio de trabajo y las direcciones a las carpetas dentro
+
+main = "" # Definimos el directorio principal
+wldsin = "{}/langa.shp".format(main) # Generamos un string con la direccion del archivo raster de LANGAA??
+output = "{}/output".format(main) # Generamos un string con la dirección de la carpeta en donde guardaremos todo lo que exportemos
+wldsout = "{}/wlds_cleaned.shp".format(output) # Generamos un string con la dirección y nombre del archivo en el que exportaremos los datos una vez limpiados
+
+
 
 
 class Model1(QgsProcessingAlgorithm):
 
-    def initAlgorithm(self, config=None):
+    def initAlgorithm(self, config=None): # Con esta primera función lo que se hace es definir un parámetro al algoritmo.
+        # Aquí se agrega un campo autoincremental (autoincremental field)
         self.addParameter(QgsProcessingParameterFeatureSink('Autoinc_id', 'autoinc_id', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
+        # Aquí se agrega  el parámetro para exportar el archivo modificado
         self.addParameter(QgsProcessingParameterFeatureSink('Wldsout', 'wldsout', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
+        # Aquí agrega el parámetro para calcular la cantidad de letras que tiene cada idioma
         self.addParameter(QgsProcessingParameterFeatureSink('Length', 'length', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
+        # Aquí se agrega la herramienta "field calculator"
         self.addParameter(QgsProcessingParameterFeatureSink('Field_calc', 'field_calc', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
+        # Aquí se agrega el parámetro para filtrar los países cuyos idiomas tienen como máximo 10 letras
         self.addParameter(QgsProcessingParameterFeatureSink('Output_menor_a_11', 'OUTPUT_menor_a_11', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, defaultValue=None))
-        self.addParameter(QgsProcessingParameterFeatureSink('Fix_geo', 'fix_geo', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
-
-    def processAlgorithm(self, parameters, context, model_feedback):
+        # Aquí se agrega la herramienta "fix geometries"
+        self.addParameter(QgsProcessingParameterFeatureSink('Fix_geo', 'fix_geo', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None)
+    
+    # Mediante la siguiente función se procesa el algoritmo. La función tiene como parámetros el nombre del algoritmo,              
+    def processAlgorithm(self, parameters, context, model_feedback): 
         # Use a multi-step feedback, so that individual child algorithm progress reports are adjusted for the
         # overall progress through the model
         feedback = QgsProcessingMultiStepFeedback(6, model_feedback)
