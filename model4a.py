@@ -1,8 +1,8 @@
 """
 Model exported as python.
-Name : modelo4acorregido
+Name : model4a
 Group : 
-With QGIS : 32209
+With QGIS : 32208
 """
 
 from qgis.core import QgsProcessing
@@ -12,11 +12,11 @@ from qgis.core import QgsProcessingParameterFeatureSink
 import processing
 
 
-class Modelo4acorregido(QgsProcessingAlgorithm):
+class Model4a(QgsProcessingAlgorithm):
 
     def initAlgorithm(self, config=None):
         self.addParameter(QgsProcessingParameterFeatureSink('Fixgeo_wlds', 'fixgeo_wlds', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
-        self.addParameter(QgsProcessingParameterFeatureSink('Fixgeo_counties', 'fixgeo_counties', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
+        self.addParameter(QgsProcessingParameterFeatureSink('Fixgeo_countries', 'fixgeo_countries', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, supportsAppend=True, defaultValue=None))
         self.addParameter(QgsProcessingParameterFeatureSink('Intersection', 'intersection', type=QgsProcessing.TypeVectorAnyGeometry, createByDefault=True, defaultValue=None))
 
     def processAlgorithm(self, parameters, context, model_feedback):
@@ -26,39 +26,39 @@ class Modelo4acorregido(QgsProcessingAlgorithm):
         results = {}
         outputs = {}
 
-        # Fix geometries - counties
+        # Fix geometries - wlds
         alg_params = {
-            'INPUT': 'C:/Users/Abi/Desktop/herramientasC5/input/counties/ne_10m_admin_0_countries.shp',
-            'OUTPUT': parameters['Fixgeo_counties']
+            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/clean.shp',
+            'OUTPUT': parameters['Fixgeo_wlds']
         }
-        outputs['FixGeometriesCounties'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
-        results['Fixgeo_counties'] = outputs['FixGeometriesCounties']['OUTPUT']
+        outputs['FixGeometriesWlds'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+        results['Fixgeo_wlds'] = outputs['FixGeometriesWlds']['OUTPUT']
 
         feedback.setCurrentStep(1)
+        if feedback.isCanceled():
+            return {}
+
+        # Fix geometries - contries
+        alg_params = {
+            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/input/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp',
+            'OUTPUT': parameters['Fixgeo_countries']
+        }
+        outputs['FixGeometriesContries'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
+        results['Fixgeo_countries'] = outputs['FixGeometriesContries']['OUTPUT']
+
+        feedback.setCurrentStep(2)
         if feedback.isCanceled():
             return {}
 
         # Statistics by categories
         alg_params = {
             'CATEGORIES_FIELD_NAME': ['ADMIN'],
-            'INPUT': 'Intersection_026c50a5_1c22_41ed_8996_ec1db44ddaa9',
-            'OUTPUT': 'C:/Users/Abi/Desktop/herramientasC5/output/languages_by_country.csv',
+            'INPUT': 'Intersection_7a8169c8_148a_4cd5_892a_d79533348735',
+            'OUTPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/languages_by_country.csv',
             'VALUES_FIELD_NAME': '',
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
         outputs['StatisticsByCategories'] = processing.run('qgis:statisticsbycategories', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
-
-        feedback.setCurrentStep(2)
-        if feedback.isCanceled():
-            return {}
-
-        # Fix geometries - wlds
-        alg_params = {
-            'INPUT': 'C:/Users/Abi/Desktop/herramientasC5/clean.shp',
-            'OUTPUT': parameters['Fixgeo_wlds']
-        }
-        outputs['FixGeometriesWlds'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
-        results['Fixgeo_wlds'] = outputs['FixGeometriesWlds']['OUTPUT']
 
         feedback.setCurrentStep(3)
         if feedback.isCanceled():
@@ -68,7 +68,7 @@ class Modelo4acorregido(QgsProcessingAlgorithm):
         alg_params = {
             'INPUT': outputs['FixGeometriesWlds']['OUTPUT'],
             'INPUT_FIELDS': ['GID'],
-            'OVERLAY': outputs['FixGeometriesCounties']['OUTPUT'],
+            'OVERLAY': outputs['FixGeometriesContries']['OUTPUT'],
             'OVERLAY_FIELDS': ['ADMIN'],
             'OVERLAY_FIELDS_PREFIX': '',
             'OUTPUT': parameters['Intersection']
@@ -78,10 +78,10 @@ class Modelo4acorregido(QgsProcessingAlgorithm):
         return results
 
     def name(self):
-        return 'modelo4acorregido'
+        return 'model4a'
 
     def displayName(self):
-        return 'modelo4acorregido'
+        return 'model4a'
 
     def group(self):
         return ''
@@ -90,4 +90,4 @@ class Modelo4acorregido(QgsProcessingAlgorithm):
         return ''
 
     def createInstance(self):
-        return Modelo4acorregido()
+        return Model4a()
