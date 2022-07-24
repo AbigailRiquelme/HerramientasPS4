@@ -1,5 +1,5 @@
 """
-Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022Name : model1
+Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022
 TomÃ¡s Pacheco y Abigail Riquelme
 Comentarios sobre el modelo 3
 
@@ -8,6 +8,11 @@ Comentarios sobre el modelo 3
 from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, 
                        QgsProcessingMultiStepFeedback, QgsProcessingParameterFeatureSink)
 import processing
+
+main = "" # Definimos el directorio principal
+inputcounties = "{}/input/counties/ne_10m_admin_0_countries.shp".format(main) # Generamos un string con la direccion del archivo raster de LANGAA??
+output = "{}/output".format(main) # Generamos un string con la direcciÃ³n de la carpeta en donde guardaremos todo lo que exportemos
+
 
 # Definimos la clase para este modelo 3. 
 
@@ -129,18 +134,23 @@ class Model3(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
 
-         #########################################################
+        #########################################################
         # Fix geometries 
         #########################################################
         
         # Necesitamos corregir las geometrías. Esto lo hacemos para evitar que los polígonos se superpongan o que haya polígonos no cerrados.
+        # Definimos el input y el ouput.
         alg_params = {
-            'INPUT': 'C:/Users/Abi/Desktop/herramientasC5/input/counties/ne_10m_admin_0_countries.shp',
+            'INPUT': inputcounties,
             'OUTPUT': parameters['Fix_geo_3']
         }
+       # Aplicamos el proceso
         outputs['FixGeometries'] = processing.run('native:fixgeometries', alg_params, context=context, feedback=feedback, is_child_algorithm=True)
         results['Fix_geo_3'] = outputs['FixGeometries']['OUTPUT']
+        
+        # Definimos que el output del programa sea el diccionario 'results'
         return results
+
 
     def name(self):
         return 'model3'
