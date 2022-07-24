@@ -5,6 +5,8 @@ Comentarios sobre el modelo 3
 
 """
 
+# Comenzamos importando las librerías que se necesitarán para correr los diferentes programas.
+
 from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, 
                        QgsProcessingMultiStepFeedback, QgsProcessingParameterFeatureSink)
 import processing
