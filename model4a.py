@@ -1,6 +1,6 @@
 """
-Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022
-TomÃ¡s Pacheco y Abigail Riquelme
+Herramientas Computacionales para la Investigacion - MAE UdeSA 2022
+Tomas Pacheco y Abigail Riquelme
 Comentarios sobre el modelo 4a
 
 """
@@ -57,6 +57,7 @@ class Model4a(QgsProcessingAlgorithm):
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
+          
         #########################################################
         # Fix geometries (segunda base: countries)
         #########################################################
@@ -97,6 +98,7 @@ class Model4a(QgsProcessingAlgorithm):
         feedback.setCurrentStep(3)
         if feedback.isCanceled():
             return {}
+          
         #########################################################
         # Hacemos la intersección de las capas 'FixGeometriesWlds'
         # y 'FixGeometriesContries' (intersections) 
