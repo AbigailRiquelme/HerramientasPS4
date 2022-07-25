@@ -2,5 +2,4 @@
 
 En este repositorio se encontrará la resolución del cuarto problem set correspondiente a la materia "Herramientas computacionales para la investigación" dictada por la profesora Amelia Gibbons en la Maestría en Economía de la Universidad de San Andrés. Los integrantes del grupo de trabajo somos Abigail Riquelme y Tomás Pacheco.
 
-En este repositorio se encuentra el archivo que contiene el informe del trabajo. Además, se pueden encontrar las siguientes carpetas:
- 
+En este repositorio se encontrarán seis códigos de Python en donde se replica al artículo de [https://www.aeaweb.org/articles?id=10.1257/aer.102.4.1508][Stelios Michalopoulos, "The Origins of Ethnolinguistic Diversity" publicado en American Economic Review en 2012]. Lo que hicimos fue armar estos modelos en QGIS y exportarlos en Python. Lo que se encontrará es que fuimos comentando línea a línea lo que hace cada uno de los códigos.
