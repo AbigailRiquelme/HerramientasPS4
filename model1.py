@@ -15,7 +15,7 @@ import os
 # Ahora vamos a definir el directorio de trabajo y las direcciones a las carpetas dentro
 
 main = "" # Definimos el directorio principal
-wldsin = "{}/langa.shp".format(main) # Generamos un string con la direccion del archivo raster de LANGAA??
+wldsin = "{}/langa.shp".format(main) # Generamos un string con la direccion del archivo raster de idiomas.
 output = "{}/output".format(main) # Generamos un string con la dirección de la carpeta en donde guardaremos todo lo que exportemos
 wldsout = "{}/wlds_cleaned.shp".format(output) # Generamos un string con la dirección y nombre del archivo en el que exportaremos los datos una vez limpiados
 
