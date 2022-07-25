@@ -1,6 +1,6 @@
 """
-Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022
-TomÃ¡s Pacheco y Abigail Riquelme
+Herramientas Computacionales para la Investigacion - MAE UdeSA 2022
+Tomas Pacheco y Abigail Riquelme
 Comentarios sobre el modelo 3
 
 """
@@ -66,6 +66,7 @@ class Model3(QgsProcessingAlgorithm):
         feedback.setCurrentStep(1)
         if feedback.isCanceled():
             return {}
+          
         ##################################################################
         # Eliminamos algunas variables (drop fields)
         ##################################################################
