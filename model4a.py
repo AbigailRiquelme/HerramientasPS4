@@ -16,7 +16,7 @@ import processing
 main = "" # Definimos el directorio principal
 inputclean = "{}/output/clean.shp".format(main) # Para importar la capa clean
 inputcountries = "{}/input/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(main) # Para importar la capa de paises
-outputcsvcountries = "{}/output/languages_by_country.csv".format(main) # Para exportar el csv con la cantidad de idiomas por pais
+outputcsvcountries = "{}/output/languages_by_country.csv".format(main) # Para exportar el csv con la cantidad de idiomas por país
 
 
 # Definimos la clase para el modelo 4a
