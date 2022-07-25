@@ -1,8 +1,7 @@
 """
-Model exported as python.
-Name : model4b
-Group : 
-With QGIS : 32208
+Herramientas Computacionales para la Investigación - MAE UdeSA 2022
+Tomás Pacheco y Abigail Riquelme
+Comentarios sobre el modelo 4b
 """
 
 # Comenzamos importando las librerías que se necesitarán para correrlo los diferentes programas.
@@ -13,9 +12,8 @@ import processing
 # Ahora vamos a definir el directorio de trabajo y las direcciones a las carpetas dentro
 
 main = ""
-input = "{}/langa.shp".format(main)
+inputs = "{}/input".format(main)
 output = "{}/output".format(main) 
-wldsout = "{}/wlds_cleaned.shp".format(output)
 
 # Definimos la clase para el modelo 4b
 
@@ -111,7 +109,7 @@ class Model4b(QgsProcessingAlgorithm):
 
         # Definimos diccionario con el input y output. 
         alg_params = {
-            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/input/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp',
+            'INPUT': '{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp'.format(inputs),
             'OUTPUT': parameters['Fixgeo_countries']
         }
         
@@ -218,7 +216,7 @@ class Model4b(QgsProcessingAlgorithm):
         alg_params = {
             'COLUMN': ['xcoord','ycoord'],
             'INPUT': 'Calculated_fd6de8a8_4baf_4c07_88a1_920472db8d05',
-            'OUTPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/csvout21.csv',
+            'OUTPUT': '{}/csvout21.csv'.format(output),
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
         # Ahora se aplica el proceso para eliminar las columnas, se utiliza como parámetro el diccionario definido en las lineas 56-59. 
@@ -261,7 +259,7 @@ class Model4b(QgsProcessingAlgorithm):
         # Definimos diccionario con el input y output. 
 
         alg_params = {
-            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/input/ne_10m_coastline/ne_10m_coastline.shp',
+            'INPUT': '{}/ne_10m_coastline/ne_10m_coastline.shp'.format(inputs),
             'OUTPUT': parameters['Fixgeo_coast']
         }
         
