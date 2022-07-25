@@ -1,5 +1,5 @@
 """
-Herramientas Computacionales para la Investigación - MAE UdeSA 2022Name : model1
+Herramientas Computacionales para la Investigación - MAE UdeSA 2022
 Tomás Pacheco y Abigail Riquelme
 Comentarios sobre el modelo 1
 
