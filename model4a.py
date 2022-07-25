@@ -1,21 +1,23 @@
 """
-Model exported as python.
-Name : model4a
-Group : 
-With QGIS : 32208
+Herramientas Computacionales para la InvestigaciÃ³n - MAE UdeSA 2022
+TomÃ¡s Pacheco y Abigail Riquelme
+Comentarios sobre el modelo 4a
+
 """
 
 # Comenzamos importando las librerías que se necesitarán para correrlo los diferentes programas.
 
-from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, QgsProcessingMultiStepFeedback,QgsProcessingParameterFeatureSin)
+from qgis.core import (QgsProcessing, QgsProcessingAlgorithm, 
+                       QgsProcessingMultiStepFeedback,QgsProcessingParameterFeatureSin)
 import processing
 
 # Ahora vamos a definir el directorio de trabajo y las direcciones a las carpetas dentro
 
 main = "" # Definimos el directorio principal
-input = "{}/langa.shp".format(main) # Generamos un string con la direccion del archivo raster de langa
-output = "{}/output".format(main) # Generamos un string con la dirección de la carpeta en donde guardaremos todo lo que exportemos
-wldsout = "{}/wlds_cleaned.shp".format(output) # Generamos un string con la dirección y nombre del archivo en el que exportaremos los datos una vez limpiados
+inputclean = "{}/output/clean.shp".format(main) # Para importar la capa clean
+inputcountries = "{}/input/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(main) # Para importar la capa de paises
+outputcsvcountries = "{}/output/languages_by_country.csv".format(main) # Para exportar el csv con la cantidad de idiomas por pais
+
 
 # Definimos la clase para el modelo 4a
 
@@ -45,7 +47,7 @@ class Model4a(QgsProcessingAlgorithm):
         # Necesitamos corregir las geometrías. Esto lo hacemos para evitar que los polígonos se superpongan o que haya polígonos no cerrados.
          # Definimos diccionario con el input y output. 
         alg_params = {
-            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/clean.shp',
+            'INPUT': inputclean,
             'OUTPUT': parameters['Fixgeo_wlds']
         }
         # Aplicamos el proceso de corregir las geometrías y las guardamos en los diccionarios creados.
@@ -65,7 +67,7 @@ class Model4a(QgsProcessingAlgorithm):
         # Definimos diccionario con el input y output. 
 
         alg_params = {
-            'INPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/input/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp',
+            'INPUT': inputcountries,
             'OUTPUT': parameters['Fixgeo_countries']
         }
         # Aplicamos el proceso de corregir las geometrías y las guardamos en los diccionarios creados.
@@ -85,7 +87,7 @@ class Model4a(QgsProcessingAlgorithm):
         alg_params = {
             'CATEGORIES_FIELD_NAME': ['ADMIN'],
             'INPUT': 'Intersection_7a8169c8_148a_4cd5_892a_d79533348735',
-            'OUTPUT': '/Volumes/GoogleDrive/Mi unidad/UdeSA/Herramientas/W4_PythonGIS/output/languages_by_country.csv',
+            'OUTPUT': outputcsvcountries,
             'VALUES_FIELD_NAME': '',
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
